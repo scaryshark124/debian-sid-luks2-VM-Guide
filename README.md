@@ -578,7 +578,7 @@ root@debian:/sources/grub/build_x86_64-efi#  install -D -m0644 ../grub-improved-
 root@debian:/sources/grub/build_x86_64-efi#  cd ../../..
 ```
 
-Change the menu title to reflect Kaisen. 
+Change the menu title to reflect Sid. 
 ```
 root@debian:/# sed -i 's|GRUB_DISTRIBUTOR="Arch"|GRUB_DISTRIBUTOR="sid"|g' /etc/default/grub
 ```
