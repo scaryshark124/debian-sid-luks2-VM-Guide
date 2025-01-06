@@ -600,7 +600,7 @@ Adding boot menu entry for UEFI Firmware Settings ...
 done
 ```
 
-I will create an sbat.csv:
+I will create an sbat.csv (this is optional if you plan to use secure boot, make sure to remove --sbat when using grub-install in the next step if you do not want to use secure boot):
 ```
 root@debian:/# cat > /usr/share/grub/sbat.csv << EOF
 sbat,1,SBAT Version,sbat,1,https://github.com/rhboot/shim/blob/main/SBAT.md
@@ -701,7 +701,7 @@ image signature certificates:
 ```
 # Let us finish up...
 
-I will umount the virtual filesystems and file systems. I will turn swap back on and shut it off for the build OS. I will then attempt to close both LUKS volumes, for some reason cryptlvm gives me trouble. I will then restart into UEFI and turn on secure boot to test out everything went alright. 
+I will umount the virtual filesystems and file systems. I will turn swap back on and shut it off for the build OS. I will then close the luks2 volumes. I will then restart into UEFI and turn on secure boot to test out everything went alright. 
 ```
 root@debian:/# logout
 
