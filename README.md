@@ -1,4 +1,4 @@
-# Build Debian Sid using debootsrap with Argon2id and Secure Boot Guide
+# Build Debian Sid VM using debootsrap with Argon2id and Secure Boot Guide
 I am going to demonstrate how to use debootstrap to build Debian Sid on a VirtualBox VM. While in chroot, I will demonstrate how to compile grub2 with ArchLinux's grub-improved-luks2 that allows me to encrypt the root system with argon2id password hashing algorithm. Lastly, I will demonstrate how to create machine owner key (MOK) to sign grub bootloader and vmlinuz.
 
 ### What you need:
