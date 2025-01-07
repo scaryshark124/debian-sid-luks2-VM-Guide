@@ -600,7 +600,7 @@ Adding boot menu entry for UEFI Firmware Settings ...
 done
 ```
 
-I will create an sbat.csv (this is optional if you plan to use secure boot, make sure to remove --sbat when using grub-install in the next step if you do not want to use secure boot):
+I will create an sbat.csv (this is optional if you plan to use secure boot):
 ```
 root@debian:/# cat > /usr/share/grub/sbat.csv << EOF
 sbat,1,SBAT Version,sbat,1,https://github.com/rhboot/shim/blob/main/SBAT.md
@@ -609,10 +609,14 @@ grub.arch,1,Arch Linux,grub,2:2.12-2,https://archlinux.org/packages/core/x86_64/
 EOF
 ```
 
-It is time to install the grub efi:
+It is time to install the grub efi. Make sure to remove "--sbat /usr/share/grub/sbat.csv" if you do not plan to use secure boot:
 ```
 root@debian:/# grub-install --target=x86_64-efi --efi-directory=/efi --boot-directory=/boot --modules="bli argon2 all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus loadenv loopback linux ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label serial sleep smbios squash4 test tpm true video xfs zfs zfscrypt zfsinfo cpuid play cryptodisk gcry_arcfour gcry_blowfish gcry_camellia gcry_cast5 gcry_crc gcry_des gcry_dsa gcry_idea gcry_md4 gcry_md5 gcry_rfc2268 gcry_rijndael gcry_rmd160 gcry_rsa gcry_seed gcry_serpent gcry_sha1 gcry_sha256 gcry_sha512 gcry_tiger gcry_twofish gcry_whirlpool luks luks2 lvm mdraid09 mdraid1x raid5rec raid6rec" --sbat /usr/share/grub/sbat.csv /dev/sda
 ```
+
+## Secure Boot (optional)
+
+If you do not care for secure boot, then you are done. Just skip to the end to umount, and close the luks2 volume.
 
 I will move over the signed shim and mok manager, as well as the grubx64.efi that we just created with grub-install. 
 ```
@@ -625,9 +629,6 @@ root@debian:/# cp /usr/lib/shim/shimx64.efi.signed /efi/EFI/BOOT/bootx64.efi
 
 root@debian:/# cp /usr/lib/shim/mmx64.efi.signed /efi/EFI/BOOT/mmx64.efi
 ```
-## Secure Boot (optional)
-
-If you do not care for secure boot, then you are done. Just skip to the end to umount, and close the luks2 volume.
 
 I will create the machine owner key along with the der cert needed when registering it with MOK manager on the first boot. I will also set restrictive permissions:
 ```
@@ -701,7 +702,7 @@ image signature certificates:
 ```
 # Let us finish up...
 
-I will umount the virtual filesystems and file systems. I will turn swap back on and shut it off for the build OS. I will then close the luks2 volumes. I will then restart into UEFI and turn on secure boot to test out everything went alright. 
+I will umount. I will turn swap off for the build OS. I will then close the luks2 volume. I will then restart into UEFI and turn on secure boot to test out everything went alright. 
 ```
 root@debian:/# logout
 
@@ -720,4 +721,4 @@ root@debian:~# cryptsetup close /dev/vg0/root
 root@debian:~# cryptsetup close sid-cryptlvm
 ```
 
-Now you just need to reboot and register you key with the MOK manager. the shim will automatically start the MOK manager. Or if you didn't create a machine owner key, then it should just boot up without the mok manager.
+Now you just need to reboot and register you key with the MOK manager. the shim will automatically start the MOK manager. Or if you didn't create a machine owner key for secure boot, then it should just boot up without the mok manager.
